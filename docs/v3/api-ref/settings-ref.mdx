@@ -2963,7 +2963,7 @@ Whether or not to display promotional content in the UI, including upgrade promp
 ## ServerWorkerChannelSettings
 Settings for server-side worker channel storage and delivery policy.
 ### `cleanup_queue_storage`
-The module to use for storing worker cleanup delivery messages. The default in-memory backend stores messages, leases, wakeups, and dead-letter entries only in the current server process; use a Redis-backed storage module for high availability or restart-safe cleanup delivery.
+The module to use for storing worker cleanup delivery messages. The default in-memory backend stores messages, leases, wakeups, and dead-letter entries only in the current server process; use an external storage module for high availability or restart-safe cleanup delivery.
 
 **Type**: `string`
 
@@ -2973,30 +2973,6 @@ The module to use for storing worker cleanup delivery messages. The default in-m
 
 **Supported environment variables**:
 `PREFECT_SERVER_WORKER_CHANNEL_CLEANUP_QUEUE_STORAGE`
-
-### `cleanup_queue_redis_url`
-The Redis URL used by the Redis-backed worker cleanup delivery queue when `cleanup_queue_storage` is set to the Redis backend.
-
-**Type**: `string`
-
-**Default**: `redis://localhost:6379/0`
-
-**TOML dotted key path**: `server.worker_channel.cleanup_queue_redis_url`
-
-**Supported environment variables**:
-`PREFECT_SERVER_WORKER_CHANNEL_CLEANUP_QUEUE_REDIS_URL`
-
-### `cleanup_queue_redis_key_prefix`
-The Redis key prefix used by the Redis-backed worker cleanup delivery queue. Use a deployment-specific prefix when sharing a Redis database across separate Prefect server deployments.
-
-**Type**: `string`
-
-**Default**: `prefect:worker-cleanup`
-
-**TOML dotted key path**: `server.worker_channel.cleanup_queue_redis_key_prefix`
-
-**Supported environment variables**:
-`PREFECT_SERVER_WORKER_CHANNEL_CLEANUP_QUEUE_REDIS_KEY_PREFIX`
 
 ### `cleanup_lease_seconds`
 The default cleanup message reservation lease duration in seconds.
@@ -3026,7 +3002,7 @@ The maximum number of committed cleanup reservations before a message is moved t
 `PREFECT_SERVER_WORKER_CHANNEL_CLEANUP_MAX_DELIVERY_ATTEMPTS`
 
 ### `cleanup_completed_idempotency_retention_seconds`
-How long completed cleanup idempotency records are retained after acknowledgement. None keeps them for the lifetime of the current server process. The in-memory backend does not survive restart; use Redis for high availability or restart-safe cleanup idempotency.
+How long completed cleanup idempotency records are retained after acknowledgement. None keeps them for the lifetime of the current server process. The in-memory backend does not survive restart; use external storage for high availability or restart-safe cleanup idempotency.
 
 **Type**: `number | None`
 
